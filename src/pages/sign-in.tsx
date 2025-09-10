@@ -1,3 +1,4 @@
+import SignInWithGoogle from '@/components/sign-in-with-google';
 import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -62,6 +63,7 @@ export default function SignInPage() {
           />
         </div>
         <button type="submit">Sign in</button>
+        <SignInWithGoogle />
       </form>
     </>
   )
