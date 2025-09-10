@@ -1,0 +1,101 @@
+import { useSignUp } from '@clerk/nextjs';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+
+export default function SignUpPage() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [code, setCode] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isLoaded) return;
+
+    try {
+      await signUp.create({ emailAddress, password });
+
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+
+      setVerifying(true);
+    } catch (error) {
+      console.error(JSON.stringify(error, null, 2));
+    }
+  };
+
+  const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isLoaded) return;
+
+    try {
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({ code });
+
+      if (signUpAttempt.status === 'complete') {
+        await setActive({
+          session: signUpAttempt.createdSessionId,
+          navigate: async () => {
+            if (router.query.rurl) {
+              router.push(router.query.rurl as string);
+            } else {
+              router.push('/');
+            }
+          }
+        })
+
+      } else {
+        console.error(JSON.stringify(signUpAttempt, null, 2));
+      }
+    } catch (error) {
+      console.error(JSON.stringify(error, null, 2));
+    }
+  };
+
+  // Display the verification form to capture the OTP code
+  if (verifying) {
+    return (
+      <>
+        <h1>Verify your email</h1>
+        <form onSubmit={handleVerify}>
+          <label id="code">Enter your verification code</label>
+          <input value={code} id="code" name="code" onChange={(e) => setCode(e.target.value)} />
+          <button type="submit">Verify</button>
+        </form>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <h1>Sign up</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Enter email address</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value={emailAddress}
+            onChange={(e) => setEmailAddress(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Enter password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit">Continue</button>
+        </div>
+      </form>
+    </>
+  );
+}
