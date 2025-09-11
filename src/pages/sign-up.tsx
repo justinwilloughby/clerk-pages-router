@@ -1,6 +1,6 @@
+import SocialSignUpButton from '@/components/social-sign-up-button';
 import { useSignUp } from '@clerk/nextjs';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -8,7 +8,6 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('');
   const [verifying, setVerifying] = useState(false);
   const [code, setCode] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,16 +34,7 @@ export default function SignUpPage() {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({ code });
 
       if (signUpAttempt.status === 'complete') {
-        await setActive({
-          session: signUpAttempt.createdSessionId,
-          navigate: async () => {
-            if (router.query.rurl) {
-              router.push(router.query.rurl as string);
-            } else {
-              router.push('/');
-            }
-          }
-        })
+        await setActive({session: signUpAttempt.createdSessionId})
 
       } else {
         console.error(JSON.stringify(signUpAttempt, null, 2));
@@ -96,6 +86,7 @@ export default function SignUpPage() {
         <div>
           <button type="submit">Continue</button>
         </div>
+        <SocialSignUpButton strategy="oauth_google" buttonText="Sign up with Google" />
       </form>
     </>
   );

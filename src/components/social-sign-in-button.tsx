@@ -1,7 +1,7 @@
 import { useSignIn } from '@clerk/nextjs';
 import { OAuthStrategy } from '@clerk/types';
 
-export default function SignInWithGoogle() {
+export default function SocialSignInButton({ strategy, buttonText }: { strategy?: OAuthStrategy, buttonText?: string }) {
   const { isLoaded, signIn } = useSignIn();
 
   const signInWith = (strategy: OAuthStrategy) => {
@@ -21,7 +21,7 @@ export default function SignInWithGoogle() {
 
   return (
     <div>
-      <button onClick={() => signInWith('oauth_google')}>Sign in with Google</button>
+      <button onClick={() => signInWith(strategy as OAuthStrategy)}>{buttonText}</button>
     </div>
   )
 }

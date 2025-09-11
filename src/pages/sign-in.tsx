@@ -1,4 +1,5 @@
-import SignInWithGoogle from '@/components/sign-in-with-google';
+import SocialSignInButton from '@/components/social-sign-in-button';
+import SignInWithGoogle from '@/components/social-sign-in-button';
 import { useSignIn } from '@clerk/nextjs';
 import { useState } from 'react';
 
@@ -50,7 +51,7 @@ export default function SignInPage() {
           />
         </div>
         <button type="submit">Sign in</button>
-        <SignInWithGoogle />
+        <SocialSignInButton strategy="oauth_google" buttonText="Sign in with Google" />
       </form>
     </>
   )
