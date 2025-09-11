@@ -1,13 +1,11 @@
 import SignInWithGoogle from '@/components/sign-in-with-google';
 import { useSignIn } from '@clerk/nextjs';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 export default function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,18 +16,7 @@ export default function SignInPage() {
       const signInAttempt = await signIn.create({ identifier: emailAddress, password });
 
       if (signInAttempt.status === 'complete') {
-        await setActive({
-          session: signInAttempt.createdSessionId,
-          navigate: async () => {
-            console.log(router.query.rurl);
-            if (router.query.rurl) {
-              router.push(router.query.rurl as string);
-            } else {
-              router.push('/');
-            }
-          }
-        })
-
+        await setActive({session: signInAttempt.createdSessionId});
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
