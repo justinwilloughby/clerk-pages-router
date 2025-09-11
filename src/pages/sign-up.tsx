@@ -92,6 +92,7 @@ export default function SignUpPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        <div id="clerk-captcha"></div>
         <div>
           <button type="submit">Continue</button>
         </div>
