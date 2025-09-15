@@ -1,9 +1,11 @@
 import SocialSignInButton from '@/components/social-sign-in-button';
 import { useSignIn } from '@clerk/nextjs';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
+  const router = useRouter();
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +18,10 @@ export default function SignInPage() {
       const signInAttempt = await signIn.create({ identifier: emailAddress, password });
 
       if (signInAttempt.status === 'complete') {
-        await setActive({session: signInAttempt.createdSessionId});
+        await setActive({
+          session: signInAttempt.createdSessionId,
+          redirectUrl: (router.query.redirect_url as string) || '/',
+        });
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
