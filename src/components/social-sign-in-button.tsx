@@ -11,7 +11,7 @@ export default function SocialSignInButton({ strategy, buttonText }: { strategy?
 
     return signIn.authenticateWithRedirect({
       strategy,
-      redirectUrl: '/sso-callback',
+      redirectUrl: (router.query.redirect_url as string) ? '/sso-callback?force_redirect_url=' + encodeURIComponent(router.query.redirect_url as string) : '/sso-callback',
       redirectUrlComplete: (router.query.redirect_url as string) || '/',
     }).then((response) => {
       console.log(response);
