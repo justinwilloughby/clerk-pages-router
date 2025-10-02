@@ -56,6 +56,7 @@ export default function SignInPage() {
         </div>
         <button type="submit">Sign in</button>
         <SocialSignInButton strategy="oauth_google" buttonText="Sign in with Google" />
+        <SocialSignInButton strategy="oauth_apple" buttonText="Sign in with Apple" />
       </form>
     </>
   )

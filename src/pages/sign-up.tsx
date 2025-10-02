@@ -92,6 +92,7 @@ export default function SignUpPage() {
           <button type="submit">Continue</button>
         </div>
         <SocialSignUpButton strategy="oauth_google" buttonText="Sign up with Google" />
+        <SocialSignUpButton strategy="oauth_apple" buttonText="Sign up with Apple" />
       </form>
     </>
   );
